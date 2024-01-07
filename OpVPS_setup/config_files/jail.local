@@ -1,0 +1,19 @@
+[DEFAULT]
+ignoreip = 127.0.0.1
+bantime = 43200
+maxretry = 3
+
+[sshd]
+enabled = true
+logpath = /var/log/auth.log
+port = 3223
+publickey = any
+mode = aggressive
+
+[ufw]
+enabled = true
+filter = ufw.aggressive
+action = iptables-allports
+logpath = /var/log/ufw.log
+maxretry = 1
+bantime = -1

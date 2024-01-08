@@ -27,13 +27,26 @@ print_error(){
 	echo -e "${CRESET}"
 }
 
+install_snap_tools(){
+	print_header "Snap packages auto-cpufreq and Video-Downloader"
+	sudo apt update && sudo apt -y install snapd
+	if [ $? -eq 0 ];then
+		sudo snap install core
+		sudo snap install video-downloader
+		sudo snap install auto-cpufreq
+	else
+		print_error "Failed to install either snapd"
+	fi
+	print_status "Finished Setting Up Snap software."
+}
+
 install_basic_utils(){
 	print_header "Basic Software and Utilities."
 	sudo apt update && sudo apt -y install \
 		tmux vim net-tools htop git \
 		wget curl xcape vlc terminator \
 		flameshot cherrytree gparted gdebi \
-		snapd peek piper dnsutils \
+		peek piper dnsutils \
 		xdotool wmctrl linux-headers-amd64
 	print_status "Done installing basic utilities/software."
 }
@@ -89,13 +102,89 @@ install_nvidia_drivers(){
 	else
 		print_error "Something went wrong. Nvidia Drivers not installed!"
 	fi 
-		
 }
-# STEP 1
-#configure_repos
-# STEP 2
-#install_basic_utils
-# STEP 3
-#install_nvidia_drivers
-# STEP 4
-#install_virtualbox
+
+install_protonvpn(){
+	print_header "Proton VPN Setup (CLI)"
+	local pvpnurl="https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.3_all.deb"
+	local pvpndeb=`echo $pvpnurl | awk -F '/' '{print $9}'`
+	print_status "Installing ${pvpndeb}"
+	wget -q $pvpnurl && sudo gdebi -n $pvpndeb
+	print_status "Installing protonvpn-cli"
+	sudo apt update && sudo apt -y install protonvpn-cli
+	rm $pvpndeb
+	print_status "Finished setup for Proton VPN"
+}
+
+install_veracrypt(){
+	#Add the following to Default mount parameters (mount options):
+	#	fmask=133,dmask=022
+	print_header "Setting Up Veracrypt"
+	local vcurl="https://launchpad.net/veracrypt/trunk/1.26.7/+download/veracrypt-1.26.7-Debian-12-amd64.deb"
+	local vcdeb=`echo $vcurl | awk -F '/' '{print $8}'`
+	print_status "Installing $vcdeb"
+	wget -q $vcurl && sudo gdebi -n $vcdeb
+	print_status "Finished installing Veracrypt"
+	rm $vcdeb
+}
+
+install_obsidian(){
+	print_header "Obsidian Installation"
+	local oburl="https://github.com/obsidianmd/obsidian-releases/releases/download/v1.5.3/obsidian_1.5.3_amd64.deb"
+	local obdeb=`echo $oburl | awk -F '/' '{print $9}'`
+	print_status "Downloading and installing Obsidian"
+	wget -q $oburl && sudo gdebi -n $obdeb
+	print_status "Finished installing Obsidian"
+	rm $obdeb
+}
+
+install_discord_plus(){
+	print_header "Setting Up Discord_plus"
+	local giturl="https://github.com/t0nyc23/discord_plus"
+	local cloned=$HOME/.local/share/Discord_plus
+	print_status "Cloning Repository"
+	git clone $giturl $cloned
+	print_status "Running install script"
+	cd $cloned && bash install.sh && cd -
+	print_status "Discord_plus is now installed"
+}
+
+install_brave(){
+	print_header "Setting Up Brave Browser"
+	local brgpg="/usr/share/keyrings/brave-browser-archive-keyring.gpg"
+	local brurl="https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
+	print_status "Import GPG from ${brurl}"
+	sudo curl -fsSLo $brgpg $brurl
+	print_status "Adding Brave Browser's repo."
+	echo "deb [signed-by=${brgpg}] https://brave-browser-apt-release.s3.brave.com/ stable main"| \
+		sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+	print_status "Installing Brave Browser"
+	sudo apt update && sudo apt -y install brave-browser
+	print_status "Brave is now installed"
+}
+
+install_sublime(){
+	print_header "Setting Up Sublime Text"
+	local suburl="https://download.sublimetext.com/sublimehq-pub.gpg"
+	print_status "Importing GPG from $suburl"
+	wget -qO - $suburl | gpg --dearmor | sudo tee \
+		/etc/apt/trusted.gpg.d/sublimehq-archive.gpg > /dev/null
+	print_status "Adding Sublime's Repository"
+	echo "deb https://download.sublimetext.com/ apt/stable/" | \
+		sudo tee /etc/apt/sources.list.d/sublime-text.list
+	print_status "Installing Sublime Text"
+	sudo apt update && sudo apt -y install sublime-text
+	print_status "Sublime-Text is now installed."
+}
+
+configure_repos
+install_basic_utils
+install_nvidia_drivers
+install_virtualbox
+install_snap_tools
+install_protonvpn
+install_veracrypt
+install_obsidian
+install_discord_plus
+install_brave
+install_sublime

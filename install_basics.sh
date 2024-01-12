@@ -1,31 +1,17 @@
 #!/bin/bash
+#configure_repos
+#install_basic_utils
+#install_nvidia_drivers
+#install_virtualbox
+#install_snap_tools
+#install_protonvpn
+#install_veracrypt
+#install_obsidian
+#install_discord_plus
+#install_brave
+#install_sublime
 
-CRESET="\e[0m"
-RED="\e[1;31m"
-CYAN="\e[1;36m"
-
-print_status(){
-	local message=$1
-	echo -e "${CYAN}[+] $message${CRESET}"
-}
-
-print_header(){
-	local message=$1
-	echo -e "${CYAN}"
-	echo -e "=============================================================="
-	echo -e "[+] $message"
-	echo -e "=============================================================="
-	echo -e "${CRESET}"
-}
-
-print_error(){
-	local message=$1
-	echo -e "${RED}"
-	echo -e "=============================================================="
-	echo -e "[!] $message"
-	echo -e "=============================================================="
-	echo -e "${CRESET}"
-}
+source utils_and_vars.sh
 
 install_snap_tools(){
 	print_header "Snap packages auto-cpufreq and Video-Downloader"
@@ -47,7 +33,8 @@ install_basic_utils(){
 		wget curl xcape vlc terminator \
 		flameshot cherrytree gparted gdebi \
 		peek piper dnsutils \
-		xdotool wmctrl linux-headers-amd64
+		xdotool wmctrl linux-headers-amd64 \
+		xfce4-panel-profiles gnome-colors zip
 	print_status "Done installing basic utilities/software."
 }
 
@@ -176,15 +163,3 @@ install_sublime(){
 	sudo apt update && sudo apt -y install sublime-text
 	print_status "Sublime-Text is now installed."
 }
-
-configure_repos
-install_basic_utils
-install_nvidia_drivers
-install_virtualbox
-install_snap_tools
-install_protonvpn
-install_veracrypt
-install_obsidian
-install_discord_plus
-install_brave
-install_sublime

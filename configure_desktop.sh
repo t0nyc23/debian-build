@@ -96,3 +96,21 @@ configure_bashrc(){
 	print_header "Configuring .bashrc"
 	cp $bashrc_file $HOME/.bashrc
 }
+
+configure_tmux(){
+	local tmux_file="$FILES_DIR/TMUX_CONF"
+	print_header "Configuring .tmux.conf"
+	cp $tmux_file $HOME/.tmux.conf
+}
+
+configure_sublime(){
+	local config_dir="$CONFIG_DIR/sublime-text/*"
+	local dest="$HOME/.config/sublime-text/"
+	print_header "Configuring Sublime Text"
+	cp -r $config_dir $dest
+	if [ $? -eq 0 ];then
+		print_status "All ok"
+	else
+		print_error "Failed to configure LightDM"
+	fi	
+}

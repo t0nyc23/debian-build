@@ -3,6 +3,15 @@ source utils_and_vars.sh
 source configure_desktop.sh
 source install_basics.sh
 
+print_header "Creating $LOG_DIR and $LOG_OUT"
+mkdir -p $LOG_DIR
+if [ $? -eq 0 ];then
+	print_status "Starting build scripts."
+else
+	print_error "Something went wrong."
+	exit
+fi
+
 #[INSTALL BASICS]
 #-------------------------------------
 basics_cmds=(
@@ -38,6 +47,8 @@ config_cmds=(
 'configure_lightdm'
 'import_xfce_config'
 'configure_bashrc'
+'configure_tmux'
+'configure_sublime'
 )
 print_header "Making Desktop Configurations."
 for task in "${config_cmds[@]}";do

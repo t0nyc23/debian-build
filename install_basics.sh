@@ -1,16 +1,4 @@
 #!/bin/bash
-#configure_repos
-#install_basic_utils
-#install_nvidia_drivers
-#install_virtualbox
-#install_snap_tools
-#install_protonvpn
-#install_veracrypt
-#install_obsidian
-#install_discord_plus
-#install_brave
-#install_sublime
-
 source utils_and_vars.sh
 
 install_snap_tools(){
@@ -34,7 +22,8 @@ install_basic_utils(){
 		flameshot cherrytree gparted gdebi \
 		peek piper dnsutils \
 		xdotool wmctrl linux-headers-amd64 \
-		xfce4-panel-profiles gnome-colors zip
+		xfce4-panel-profiles gnome-colors zip \
+		lightdm-gtk-greeter-settings
 	print_status "Done installing basic utilities/software."
 }
 

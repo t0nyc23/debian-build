@@ -18,10 +18,10 @@ import_xfce_config(){
 install_materia_theme(){
 
 	local theme_file="$FILES_DIR/Materia-Blackout.zip"
-	local themes_dir="$HOME/.themes"
+	#local themes_dir="$HOME/.themes"
 	print_header "Installing Materia-Blackout theme."
-	mkdir $themes_dir
-	unzip $theme_file -d $themes_dir
+	#mkdir $themes_dir
+	sudo unzip $theme_file -d /usr/share/themes
 	if [ $? -eq 0 ];then
 		print_status "All ok"
 	else
@@ -47,7 +47,7 @@ configure_move2screen(){
 	sudo cp $script_file $install_dir
 	if [ $? -eq 0 ];then
 		sudo chown root:root $install_dir
-		sudo chmod 644 $install_dir
+		sudo chmod 755 $install_dir
 		print_status "Done"
 	else
 		print_error "Failed to configure move2screen"
@@ -77,18 +77,22 @@ configure_wallpapper(){
 	fi
 }
 
-configure_move2screen
-configure_super_key
-configure_wallpapper
-install_materia_theme
-import_panel_config
-import_xfce_config
+configure_lightdm(){
+	local background_image="$HOME/.local/share/backgrounds/ellcyan.jpg"
+	local config_file="$FILES_DIR/lightdm-gtk-greeter.conf"
+	print_status "Configuring LightDM"
+	sudo cp $background_image /usr/share/backgrounds/
+	sudo cp $config_file /etc/lightdm/
+	sudo chown root:root /etc/lightdm/lightdm-gtk-greeter.conf
+	if [ $? -eq 0 ];then
+		print_status "All ok"
+	else
+		print_error "Failed to configure LightDM"
+	fi	
+}
 
-
-
-
-
-
-
-
-
+configure_bashrc(){
+	local bashrc_file="$FILES_DIR/BASHRC"
+	print_header "Configuring .bashrc"
+	cp $bashrc_file $HOME/.bashrc
+}

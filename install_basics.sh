@@ -3,23 +3,23 @@ source utils_and_vars.sh
 
 install_snap_tools(){
 	print_header "Snap packages auto-cpufreq and Video-Downloader"
-	local logile="$LOG_DIR/install_snap_tools.log"
+	local logfile="$LOG_DIR/install_snap_tools.log"
 	sudo apt-get update >> $logfile
 	sudo apt-get -y install snapd >> $logfile
 	if [ $? -eq 0 ];then
 		sudo snap install core >> $logfile
 		sudo snap install video-downloader >> $logfile
 		sudo snap install auto-cpufreq >> $logfile
+		print_status "Finished Setting Up Snap software."
 	else
-		print_error "Failed to install either snapd"
+		print_error "Failed to install snapd"
 	fi
-	print_status "Finished Setting Up Snap software."
 }
 
 install_basic_utils(){
 	print_header "Basic Software and Utilities."
 	local logfile="$LOG_DIR/install_basic_utils.log"
-	sudo apt-get update > $logfile
+	sudo apt-get update >> $logfile
 	sudo apt-get -y install \
 		tmux vim net-tools htop git \
 		wget curl xcape vlc \
@@ -46,7 +46,8 @@ install_virtualbox(){
 			sudo tee /etc/apt/sources.list.d/virtualbox.list >> $logfile
 		if [ $? -eq 0 ]; then
 			print_status "Installing VirtualBox."
-			sudo apt update && sudo apt -y install virtualbox-7.0 | tee -a $logfile
+			sudo apt-get update
+			sudo apt-get -y install virtualbox-7.0 | tee -a $logfile
 			if [ $? -eq 0 ]; then
 				print_status "Adding $USER to vboxusers"
 				sudo usermod -aG vboxusers $USER
@@ -77,14 +78,20 @@ configure_repos(){
 
 install_nvidia_drivers(){
 	local logfile="$LOG_DIR/install_nvidia_drivers.log"
-	print_header "Installing Nvidia Graphics Drivers."
-	sudo apt-get update >> $logfile
-	sudo apt-get -y install nvidia-driver firmware-misc-nonfree >> $logfile
-	if [ $? -eq 0 ]; then
-		print_status "Finished Installing Nvidia Graphics Drivers."
+	echo -ne "\e[1;36m[+] Install NVIDIA Graphics Drivers?[Y/n]>>\e[0m "
+	read user_input
+	if [ "${user_input,,}" == "y" ];then
+		print_header "Installing Nvidia Graphics Drivers."
+		sudo apt-get update >> $logfile
+		sudo apt-get -y install nvidia-driver firmware-misc-nonfree >> $logfile
+		if [ $? -eq 0 ]; then
+			print_status "Finished Installing Nvidia Graphics Drivers."
+		else
+			print_error "Something went wrong. Nvidia Drivers not installed!"
+		fi 
 	else
-		print_error "Something went wrong. Nvidia Drivers not installed!"
-	fi 
+		echo -ne "\e[1;31m[+] Will not Install NVIDIA Graphics Drivers\n\e[0m"
+	fi
 }
 
 install_protonvpn(){

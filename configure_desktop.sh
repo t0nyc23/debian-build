@@ -107,6 +107,7 @@ configure_sublime(){
 	local config_dir="$CONFIG_DIR/sublime-text/*"
 	local dest="$HOME/.config/sublime-text/"
 	print_header "Configuring Sublime Text"
+	mkdir -p $dest
 	cp -r $config_dir $dest
 	if [ $? -eq 0 ];then
 		print_status "All ok"

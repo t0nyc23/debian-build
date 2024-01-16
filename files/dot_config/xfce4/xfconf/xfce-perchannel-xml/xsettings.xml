@@ -2,8 +2,8 @@
 
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
-    <property name="ThemeName" type="string" value="Materia-Blackout"/>
-    <property name="IconThemeName" type="string" value="gnome-brave"/>
+    <property name="ThemeName" type="string" value="non-gtk-dark"/>
+    <property name="IconThemeName" type="string" value="non-blue-icons"/>
     <property name="DoubleClickTime" type="empty"/>
     <property name="DoubleClickDistance" type="empty"/>
     <property name="DndDragThreshold" type="empty"/>

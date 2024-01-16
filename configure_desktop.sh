@@ -2,42 +2,50 @@
 
 source utils_and_vars.sh
 
-DEST_XFCE_CONF="$HOME/.config/xfce4"
-SRC_XFCE_CONF="$CONFIG_DIR/xfce4/*"
+install_themes(){
+	local themes_dest="/usr/share/themes/"
+	local icons_dest="/usr/share/icons/"
+	local bg_dest="/usr/share/backgrounds/"
+	local bg_default="/usr/share/images/desktop-base/default"
+	local lightdm_dest="/etc/lightdm/"
+	local git_repo="https://github.com/t0nyc23/non-themes"
 
-import_xfce_config(){
-	print_header "Importing XFCE4 Settings at $DEST_XFCE_CONF"
-	cp -r $SRC_XFCE_CONF $DEST_XFCE_CONF
-	if [ $? -eq 0 ];then
-		print_status "All ok"
-	else
-		print_error "Failed to import XFCE4 settings."
-	fi
+	print_header "Installing and configuring themes."
+	print_status "Cloning $git_repo"
+	git clone -q $git_repo
+	cd non-themes
+	
+	print_status "Installing non-gtk-dark theme."
+	sudo cp -r non-gtk-dark $themes_dest
+	print_status "Installing non-gtk-darker theme."
+	sudo cp -r non-gtk-darker $themes_dest
+	print_status "Installing non-blue-icons theme."
+	sudo cp -r non-blue-icons $icons_dest
+	print_status "Installing LightDM greeter configuration."
+	sudo cp lightdm-gtk-greeter.conf $lightdm_dest
+	print_status "Adding background.jpg to /usr/share/backgrounds."
+	sudo cp background.jpg $bg_dest
+	print_status "Creating symlink for backround.jpg"
+	sudo ln -sf $bg_dest/background.jpg $bg_default
 }
 
-install_materia_theme(){
 
-	local theme_file="$FILES_DIR/Materia-Blackout.zip"
-	#local themes_dir="$HOME/.themes"
-	print_header "Installing Materia-Blackout theme."
-	#mkdir $themes_dir
-	sudo unzip $theme_file -d /usr/share/themes
-	if [ $? -eq 0 ];then
-		print_status "All ok"
-	else
-		print_error "Failed to install Materia-Blackout theme."
-	fi
-}
-
-import_panel_config(){
+configure_xfce4_desktop(){	
+	local dest_xfce_conf="$HOME/.config/xfce4"
+	local src_xfce_conf="$CONFIG_DIR/xfce4/*"
 	local panel_config="$FILES_DIR/non-custom-panel.tar.bz2"
-	print_header "Importing Custom Panel Configuration"
+	
+	print_header "Configuring XFCE4 desktop environment."
+	print_status "Importing XFCE4 settings."
+	cp -r $src_xfce_conf $dest_xfce_conf
+	
+	print_status "Applying themes."
+	xfconf-query -c xfwm4 -p /general/theme -s non-gtk-dark
+	xfconf-query -c xsettings -p /Net/ThemeName -s non-gtk-dark
+	xfconf-query -c xsettings -p /Net/IconThemeName -s non-blue-icons
+
+	print_status "Importing custom panel configuration."
 	xfce4-panel-profiles load $panel_config
-	if [ $? -eq 0 ];then
-		print_status "All ok"
-	else
-		print_error "Failed to import custom panel Configuration"
-	fi
 }
 
 configure_move2screen(){
@@ -63,32 +71,6 @@ configure_super_key(){
 	else
 		print_error "Failed to configure super key menu"
 	fi
-}
-
-configure_wallpapper(){
-	local zip_file="$FILES_DIR/backgrounds.zip"
-	local dest_path="$HOME/.local/share/"
-	print_header "Configuring Desktop Wallpappers"
-	unzip $zip_file -d $dest_path
-	if [ $? -eq 0 ];then
-		print_status "All ok"
-	else
-		print_error "Failed to configure Wallpappers"
-	fi
-}
-
-configure_lightdm(){
-	local background_image="$HOME/.local/share/backgrounds/ellcyan.jpg"
-	local config_file="$FILES_DIR/lightdm-gtk-greeter.conf"
-	print_status "Configuring LightDM"
-	sudo cp $background_image /usr/share/backgrounds/
-	sudo cp $config_file /etc/lightdm/
-	sudo chown root:root /etc/lightdm/lightdm-gtk-greeter.conf
-	if [ $? -eq 0 ];then
-		print_status "All ok"
-	else
-		print_error "Failed to configure LightDM"
-	fi	
 }
 
 configure_bashrc(){

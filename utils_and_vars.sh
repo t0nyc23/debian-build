@@ -11,7 +11,7 @@ CONFIG_DIR="$FILES_DIR/dot_config"
 
 print_status(){
 	local message=$1
-	echo -e "${CYAN}[+] $message${CRESET}" | tee -a $LOG_OUT
+	echo -e "${CYAN}--- $message${CRESET}" | tee -a $LOG_OUT
 }
 
 print_header(){

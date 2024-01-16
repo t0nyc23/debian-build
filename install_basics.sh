@@ -1,34 +1,44 @@
 #!/bin/bash
 source utils_and_vars.sh
 
+install_basic_utils(){
+	print_header "Basic Software and Utilities."
+	local logfile="$LOG_DIR/install_basic_utils.log"
+	local software=(
+		'net-tools' 'tmux' 'vim' 'htop' 'git'
+		'flameshot' 'wget' 'vlc' 'curl' 'zip'
+		'xcape' 'prips' 'xdotool' 'dnsutils'
+		'piper' 'gdebi' 'gparted' 'cherrytree'
+		'linux-headers-amd64' 'wmctrl' 'gnome-colors' 'peek'
+		'lightdm-gtk-greeter-settings' 'xfce4-panel-profiles'
+	)
+	print_status "Doing an update."
+	sudo apt-get update >> $logfile
+	for package in "${software[@]}";do
+		print_status "Installing: $package"
+		sudo apt-get -y install $package >> $logfile
+	done
+	print_status "Done installing basic utilities/software."
+}
+
 install_snap_tools(){
 	print_header "Snap packages auto-cpufreq and Video-Downloader"
 	local logfile="$LOG_DIR/install_snap_tools.log"
+	print_status "Doing an update."
 	sudo apt-get update >> $logfile
+	print_status "Installing: snapd"
 	sudo apt-get -y install snapd >> $logfile
 	if [ $? -eq 0 ];then
+		print_status "Installing snap: core"
 		sudo snap install core >> $logfile
+		print_status "Installing snap: video-downloader"
 		sudo snap install video-downloader >> $logfile
+		print_status "Installing snap: auto-cpufreq"
 		sudo snap install auto-cpufreq >> $logfile
 		print_status "Finished Setting Up Snap software."
 	else
 		print_error "Failed to install snapd"
 	fi
-}
-
-install_basic_utils(){
-	print_header "Basic Software and Utilities."
-	local logfile="$LOG_DIR/install_basic_utils.log"
-	sudo apt-get update >> $logfile
-	sudo apt-get -y install \
-		tmux vim net-tools htop git \
-		wget curl xcape vlc \
-		flameshot cherrytree gparted gdebi \
-		peek piper dnsutils prips \
-		xdotool wmctrl linux-headers-amd64 \
-		xfce4-panel-profiles gnome-colors zip \
-		lightdm-gtk-greeter-settings >> $logfile
-	print_status "Done installing basic utilities/software."
 }
 
 install_virtualbox(){
@@ -45,8 +55,9 @@ install_virtualbox(){
 		echo "deb [arch=amd64 signed-by=${vboxascout}] http://download.virtualbox.org/virtualbox/debian bookworm contrib" | \
 			sudo tee /etc/apt/sources.list.d/virtualbox.list >> $logfile
 		if [ $? -eq 0 ]; then
-			print_status "Installing VirtualBox."
+			print_status "Doing an update."
 			sudo apt-get update
+			print_status "Installing: VirtualBox"
 			sudo apt-get -y install virtualbox-7.0 | tee -a $logfile
 			if [ $? -eq 0 ]; then
 				print_status "Adding $USER to vboxusers"
@@ -82,8 +93,12 @@ install_nvidia_drivers(){
 	read user_input
 	if [ "${user_input,,}" == "y" ];then
 		print_header "Installing Nvidia Graphics Drivers."
+		print_status "Doing an update."
 		sudo apt-get update >> $logfile
-		sudo apt-get -y install nvidia-driver firmware-misc-nonfree >> $logfile
+		print_status "Installing: nvidia-driver"
+		sudo apt-get -y install nvidia-driver >> $logfile
+		print_status "Installing: firmware-misc-nonfree"
+		sudo apt-get -y install firmware-misc-nonfree >> $logfile
 		if [ $? -eq 0 ]; then
 			print_status "Finished Installing Nvidia Graphics Drivers."
 		else
@@ -101,8 +116,9 @@ install_protonvpn(){
 	print_header "Proton VPN Setup (CLI)"
 	print_status "Installing ${pvpndeb}"
 	wget -q $pvpnurl && sudo gdebi -n $pvpndeb
-	print_status "Installing protonvpn-cli"
+	print_status "Doing and update."
 	sudo apt-get update >> $logfile
+	print_status "Installing protonvpn-cli"
 	sudo apt-get -y install protonvpn-cli >> $logfile
 	rm $pvpndeb
 	print_status "Finished setup for Proton VPN"
@@ -155,8 +171,9 @@ install_brave(){
 	print_status "Adding Brave Browser's repo."
 	echo "deb [signed-by=${brgpg}] https://brave-browser-apt-release.s3.brave.com/ stable main"| \
 		sudo tee /etc/apt/sources.list.d/brave-browser-release.list >> $logfile
-	print_status "Installing Brave Browser"
+	print_status "Doing an update."
 	sudo apt-get update >> $logfile
+	print_status "Installing Brave Browser"
 	sudo apt-get -y install brave-browser >> $logfile
 	print_status "Brave is now installed"
 }
@@ -171,8 +188,9 @@ install_sublime(){
 	print_status "Adding Sublime's Repository"
 	echo "deb https://download.sublimetext.com/ apt/stable/" | \
 		sudo tee /etc/apt/sources.list.d/sublime-text.list >> $logfile
-	print_status "Installing Sublime Text"
+	print_status "Doing an update."
 	sudo apt-get update >> $logfile
+	print_status "Installing Sublime Text"
 	sudo apt-get -y install sublime-text >> $logfile
 	print_status "Sublime-Text is now installed."
 }

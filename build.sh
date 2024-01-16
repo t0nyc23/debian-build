@@ -39,16 +39,13 @@ done
 #[CONFIGURE DESKTOP]
 #-------------------------------------
 config_cmds=(
-'import_panel_config'
-'install_materia_theme'
-'configure_wallpapper'
-'configure_move2screen'
-'configure_super_key'
-'configure_lightdm'
-'import_xfce_config'
-'configure_bashrc'
-'configure_tmux'
-'configure_sublime'
+	'install_themes'
+	'configure_xfce4_desktop'
+	'configure_move2screen'
+	'configure_super_key'
+	'configure_bashrc'
+	'configure_tmux'
+	'configure_sublime'
 )
 print_header "Making Desktop Configurations."
 for task in "${config_cmds[@]}";do

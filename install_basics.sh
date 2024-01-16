@@ -58,7 +58,7 @@ install_virtualbox(){
 			print_status "Doing an update."
 			sudo apt-get update
 			print_status "Installing: VirtualBox"
-			sudo apt-get -y install virtualbox-7.0 | tee -a $logfile
+			sudo apt-get -y install virtualbox-7.0 >> $logfile
 			if [ $? -eq 0 ]; then
 				print_status "Adding $USER to vboxusers"
 				sudo usermod -aG vboxusers $USER
@@ -89,10 +89,10 @@ configure_repos(){
 
 install_nvidia_drivers(){
 	local logfile="$LOG_DIR/install_nvidia_drivers.log"
+	print_header "Installing Nvidia Graphics Drivers."
 	echo -ne "\e[1;36m[+] Install NVIDIA Graphics Drivers?[Y/n]>>\e[0m "
 	read user_input
 	if [ "${user_input,,}" == "y" ];then
-		print_header "Installing Nvidia Graphics Drivers."
 		print_status "Doing an update."
 		sudo apt-get update >> $logfile
 		print_status "Installing: nvidia-driver"

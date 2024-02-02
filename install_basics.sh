@@ -11,7 +11,7 @@ install_basic_utils(){
 		'piper' 'gdebi' 'gparted' 'cherrytree'
 		'linux-headers-amd64' 'wmctrl' 'gnome-colors' 'peek'
 		'lightdm-gtk-greeter-settings' 'xfce4-panel-profiles'
-		'gvfs-backends' 'gvfs-fuse'
+		'gvfs-backends' 'gvfs-fuse' 'baobab' 'gnome-disk-utility'
 	)
 	print_status "Doing an update."
 	sudo apt-get update >> $logfile

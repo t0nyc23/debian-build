@@ -85,6 +85,12 @@ configure_tmux(){
 	cp $tmux_file $HOME/.tmux.conf
 }
 
+configure_vim(){
+	local vim_file="$FILES_DIR/VIMRC"
+	print_header "Configuring .vimrc"
+	cp $vim_file $HOME/.vimrc
+}
+
 configure_sublime(){
 	local config_dir="$CONFIG_DIR/sublime-text/*"
 	local dest="$HOME/.config/sublime-text/"

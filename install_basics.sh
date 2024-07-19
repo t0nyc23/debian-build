@@ -77,14 +77,13 @@ configure_repos(){
 	local logfile="$LOG_DIR/configure_repos.log"
 	print_header "Configuring Debian Repositories."
 	sudo mv /etc/apt/sources.list /etc/apt/sources.list_old
-	local sources_list="
-		\rdeb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware\n
-		\rdeb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware\n
-		\rdeb http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware\n
-		\rdeb-src http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware\n
-		\rdeb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware\n
-		\rdeb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware"
-	echo -e $sources_list | sudo tee /etc/apt/sources.list > $logfile
+	local sources_list="deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware"
+	echo "$sources_list" | sudo tee /etc/apt/sources.list > $logfile
 	print_status "Finished Configuring Debian Repositories."
 }
 

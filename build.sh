@@ -45,6 +45,7 @@ config_cmds=(
 	'configure_super_key'
 	'configure_bashrc'
 	'configure_tmux'
+    'configure_vim'
 	'configure_sublime'
 )
 print_header "Making Desktop Configurations."
